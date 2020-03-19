@@ -19,7 +19,7 @@ class App
 		while (true) {
 			$this->get_user_input($this->is_waite_user_input);
 			if (!$this->is_waite_user_input)
-				sleep(1);
+				time_nanosleep(0, 500000000);
 			$this->elevator_turn();
 		}
 	}
@@ -44,8 +44,10 @@ class App
 				break;
 			$user_input_arr = explode(' ', $user_input);
 			$method = current($user_input_arr);
-			if (method_exists($this, $method)) {
-				if ($this->$method($user_input_arr))
+			unset($user_input_arr[0]);
+			$user_input = implode(' ', $user_input_arr);
+			if (method_exists($this, $method) && $this->is_legal_user_method($method)) {
+				if ($this->$method($user_input))
 					break;
 			}
 			else {
@@ -60,14 +62,26 @@ class App
 		return true;
 	}
 
-	private function add_human($user_input_arr) {
-		if (count($user_input_arr) < 4) {
+	private function add_humans($user_input) {
+		$user_input_arr = explode(',', $user_input);
+		foreach ($user_input_arr as $user_human) {
+			$user_human = trim($user_human);
+			if (!$this->add_human($user_human))
+				return false;
+		}
+		return true;
+	}
+
+	private function add_human($user_input) {
+		$user_input_arr = explode(' ', $user_input);
+		if (count($user_input_arr) < 3) {
 			printf("Некоректное количество параметров\n");
 			return (0);
 		}
-		$name = $user_input_arr[1];
-		$on_flor = intval($user_input_arr[2]);
-		$to_flor = intval($user_input_arr[3]);
+		var_dump($user_input_arr);
+		$name = $user_input_arr[0];
+		$on_flor = intval($user_input_arr[1]);
+		$to_flor = intval($user_input_arr[2]);
 
 		if ((!$this->isFloorCorrect($on_flor) || !$this->isFloorCorrect($to_flor)) && $on_flor != $to_flor) {
 			printf("Некоректные параметры этажа\n");
@@ -82,6 +96,15 @@ class App
 		if ($floor < 1 || $floor > $this->elevator->floors)
 			return false;
 		return true;
+	}
+
+	private function is_legal_user_method($method) {
+		$available_methods = array(
+			'add_human',
+			'do_all',
+			'add_humans',
+		);
+		return in_array($method, $available_methods);
 	}
 
 	public function test()

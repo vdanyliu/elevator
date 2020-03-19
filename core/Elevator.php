@@ -33,7 +33,8 @@ class Elevator
 
 	public function work() {
 		if ($this->is_need_stop()) {
-			printf("Лифт остановился на %i этаже\n", $this->elevator_floor);
+			if ($this->elevator_direction)
+				printf("Лифт остановился на %i этаже\n", $this->elevator_floor);
 			if ($this->is_people_need_drop())
 				$this->drop_people();
 			if ($this->is_people_waiting_on_floor())
