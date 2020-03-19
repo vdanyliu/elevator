@@ -52,7 +52,6 @@ class App
 			}
 			else {
 				printf("Вы ввели некоректные данные %s\n", $user_input);
-				printf("Такой команды не существует %s\n", current($user_input_arr));
 			}
 		}
 	}
@@ -72,19 +71,24 @@ class App
 		return true;
 	}
 
+	private function help() {
+		printf("'add_human Tester 10 20' - Добавить человека с именем Tester на 10 этаж, который поедет на 20\n");
+		printf("'add_humans Tester1 10 20, Tester2 1 10' - Добавить несколько людей через ',', синтаксис должен сохраняться \n");
+		printf("'do_all' Лифт развезет всех людей, не дожидаясь inputа\n");
+	}
+
 	private function add_human($user_input) {
 		$user_input_arr = explode(' ', $user_input);
 		if (count($user_input_arr) < 3) {
 			printf("Некоректное количество параметров\n");
 			return (0);
 		}
-		var_dump($user_input_arr);
 		$name = $user_input_arr[0];
 		$on_flor = intval($user_input_arr[1]);
 		$to_flor = intval($user_input_arr[2]);
 
-		if ((!$this->isFloorCorrect($on_flor) || !$this->isFloorCorrect($to_flor)) && $on_flor != $to_flor) {
-			printf("Некоректные параметры этажа\n");
+		if (!$this->isFloorCorrect($on_flor) || !$this->isFloorCorrect($to_flor) || $on_flor == $to_flor) {
+			printf("%s\nНекоректные параметры этажа\n", $user_input);
 			return false;
 		}
 
@@ -103,6 +107,7 @@ class App
 			'add_human',
 			'do_all',
 			'add_humans',
+			'help',
 		);
 		return in_array($method, $available_methods);
 	}

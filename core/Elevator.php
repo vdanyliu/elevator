@@ -20,8 +20,8 @@ class Elevator
 			printf("Введите количество этажей в доме\n");
 			fscanf(STDIN, "%d", $this->floors);
 			$f = intval($this->floors);
-			if ($f <= 0 || $f > 100) {
-				printf("Некоректный ввод\nЭтажей должно быть больше 0 и меньше 100\n");
+			if ($f <= 1 || $f > 100) {
+				printf("Некоректный ввод\nЭтажей должно быть больше 1 и меньше 100\n");
 			}
 			else {
 				printf("Количество этажей = %d\n", $this->floors);
@@ -109,9 +109,6 @@ class Elevator
 	}
 
 	private function is_need_stop() {
-//		var_dump($this->people_in_elevator);
-//		var_dump($this->is_people_waiting_on_floor());
-//		var_dump($this->is_people_need_drop());
 		if (!$this->is_people_waiting_on_floor() && !$this->is_people_need_drop())
 			return false;
 		return true;
