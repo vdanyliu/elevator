@@ -1,4 +1,6 @@
 # elevator
 
-Запуск : php elevator.php
+php App симуляции лифта
+
+Запуск : php elevator.php<br/>
 help   : help
